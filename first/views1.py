@@ -2,7 +2,8 @@
 from rest_framework import generics, status, viewsets, response
 
 from . import serializers
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from signin.models import AbstractBaseUser, MyManager , User1
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode
@@ -15,7 +16,7 @@ class PasswordReset(generics.GenericAPIView):
         serializer= self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         email=serializer.data["email"]
-        user= User.objects.filter(email=email).first()
+        user= User1.objects.filter(email=email).first()
         if user:
             encoded_pk= urlsafe_base64_encode (force_bytes(user.pk))
             token=PasswordResetTokenGenerator().make_token(user)
